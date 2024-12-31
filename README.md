@@ -1,2 +1,2 @@
-# Todolist
+# Project
 HTML,CSS,JS,Tailwind
