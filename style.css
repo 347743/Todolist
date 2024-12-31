@@ -1,0 +1,23 @@
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.list-group li{
+  padding: 10px 16px;
+}
+
+.list-group li:hover{
+  background-color: #f1f1f1;
+}
+
+.list-group li.completed{
+  color: #777;
+  font-style: italic;
+  text-decoration: line-through;
+}
+
+.list-group li.completed::after{
+  content: 'done';
+  float: right;
+}

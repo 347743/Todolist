@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="h-screen grid items-center justify-center font-sans bg-gradient-to-b from-pink-100 to-pink-400">
+
+    <div class="mainbox flex flex-col items-center justify-center w-[300px]" id="mainbox">
+        <img src="https://i.pinimg.com/564x/34/c3/33/34c3332cb8eb6c448bb4544cd7df4bcd.jpg" alt="user"
+            class="w-1/2 p-5 rounded-full mb-10">
+
+        <button type="button" id="loginbtn"
+            class="loginbtn w-full bg-white text-black py-2 px-4 mt-10 rounded mb-2 hover:bg-transparent hover:text-black hover:border-2 hover:border-solid transation-colors duration-300"
+            onclick="loginpage()">Login</button>
+        <button type="button" id="signupbtn"
+            class="signupbtn w-full bg-white text-black py-2 px-4 rounded mb-2 hover:bg-transparent hover:text-black hover:border-2 hover:border-solid transation-colors duration-300 mb-6"
+            onclick="signuppage()">Sign Up</button>
+        <br>
+
+        <a href="javascript:void(0);" class="text-sm underline mt-4">Continue as a Guest</a>
+    </div>
+
+    <!-- Login Form -->
+    <div class="container w-full flex flex-col items-center justify-center hidden" id="loginform">
+        <div class="loginbox text-center pt-6 rounded">
+            <h2 class="text-2xl font-bold">Welcome,</h2>
+            <p class="text-lg py-3 mb-4">Glad to See You!</p>
+            <form action="" method="">
+                <div
+                    class="form-group w-full bg-white rounded border p-2 mt-2 mb-4 hover:border-2 hover:border-blue-500">
+                    <input type="email" name="email" id="loginemail" autocomplete="off" placeholder="Email Address"
+                        class="form-control w-full outline-none" autofocus required>
+                </div>
+
+                <div class="form-group w-full bg-white flex items-center rounded border p-2 mb-4 hover:border-blue-500">
+                    <input type="password" name="password" id="loginpassword" autocomplete="off" placeholder="Password"
+                        class="form-control w-full outline-none" autofocus required>
+                    <div class="" id="showpw">
+                        <i class="far fa-eye-slash"></i>
+                    </div>
+                </div>
+            </form>
+            <a href="javascript:void(0);" class="text-sm flex justify-end text-blue-500 p-2">Forget Password?</a>
+            <button type="button"
+                class="w-full bg-transparent text-white border-2 border-solid text-black py-2 px-4 rounded mb-2 hover:bg-white hover:text-black transation-colors duration-300"
+                id="login-btn">Login</button>
+            <span class="text-sm py-6 mt-4  inline-block">Or Login with</span>
+            <div class="social w-[300px] flex items-center mb-5">
+                <button type="button" class="btn w-1/2 text-lg px-4 py-2 rounded bg-white text-blue-500"><i
+                        class="fab fa-google"></i></button>
+                <button type="button" class="btn w-1/2 text-lg px-4 py-2 rounded bg-white text-blue-500 ml-2"><i
+                        class="fab fa-facebook-f"></i></button>
+            </div>
+            <p class="text-sm py-5">Don't Have an account?<a href="#" class="text-white" id="signupbtn"
+                    onclick="signuppage()">Sign Up Now</a></p>
+        </div>
+    </div>
+
+    <!-- Signup Form -->
+    <div class="container w-full flex flex-col items-center justify-center hidden" id="signupform">
+        <div class="signupbox text-center pt-6 rounded">
+            <h2 class="text-2xl font-bold">Create account</h2>
+            <p class="text-lg py-3 mb-4">to get started now!</p>
+            <form action="" method="">
+                <div
+                    class="form-group w-full bg-white rounded border p-2 mt-2 mb-4 hover:border-2 hover:border-blue-500">
+                    <input type="email" name="email" id="signupemail" autocomplete="off" placeholder="Email Address"
+                        class="form-control w-full outline-none" autofocus required>
+                </div>
+
+                <div class="form-group w-full bg-white flex items-center rounded border p-2 mt-2 mb-4">
+                    <input type="password" name="password" id="signuppassword" autocomplete="off" placeholder="Password"
+                        class="form-control w-full outline-none" autofocus required>
+                    <div class="" id="showsignpw">
+                        <i class="far fa-eye-slash"></i>
+                    </div>
+                </div>
+                <div class="form-group w-full bg-white flex items-center rounded border p-2 mt-2 mb-4">
+                    <input type="password" name="password" id="confirmpassword" autocomplete="off"
+                        placeholder="Confirm Password" class="form-control w-full outline-none" autofocus required>
+                    <div class="" id="showsigncpw">
+                        <i class="far fa-eye-slash"></i>
+                    </div>
+                </div>
+            </form>
+            <button type="button"
+                class="w-full bg-transparent text-white border-2 border-solid text-black py-2 px-4 rounded mb-2 hover:bg-white hover:text-black transation-colors duration-300"
+                id="signup-btn">Sign Up</button>
+            <span class="text-sm py-6 mt-4 inline-block">Or Sign Up with</span>
+
+            <div class="social w-[300px] flex items-center mb-5">
+                <button type="button" class="btn w-1/2 text-lg px-4 py-2 rounded bg-white text-blue-500"><i
+                        class="fab fa-google"></i></i></button>
+                <button type="button" class="btn w-1/2 text-lg px-4 py-2 rounded bg-white text-blue-500 ml-2"><i
+                        class="fab fa-facebook-f"></i></i></button>
+            </div>
+
+            <p class="text-sm py-5">Already have an account?<a href="#" class="text-white" id="loginbtn"
+                    onclick="loginpage()">Login Now</a></p>
+        </div>
+    </div>
+
+    <!-- to do form -->
+
+    <div class="container w-[300px] flex flex-col items-center p-2 bg-transparent border-2 rounded hidden" id="todobox">
+        <h3 class="font-2xl font-bold py-3">To Do List</h3>
+
+        <form action="" method="get" class="w-full outline-none py-3" id="todoform">
+            <div class="form-group w-full bg-white rounded border p-2">
+                <input type="text" name="text" id="textbox" autocomplete="off" placeholder="Add to do list"
+                    class="form-control outline-none" autofocus required>
+            </div>
+        </form>
+
+        <ul class="list-group w-full bg-white rounded" id="list-group">
+            <!-- <li class="completed">A Sann</li>
+            <li>A Yann</li> -->
+        </ul>
+
+    </div>
+
+    </div>
+</body>
+<script src="./app.js" type="text/javascript"></script>
+
+</html>
