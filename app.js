@@ -13,89 +13,49 @@ const getshowpw = document.getElementById('showpw');
 const getshowsignpw = document.getElementById('showsignpw');
 const getshowsigncpw = document.getElementById('showsigncpw');
 
+let currentUser = null;
 
-
-function loginpage(){
-
-    mainbox.classList.add('hidden');
-    getloginform.classList.remove('hidden');
-    getsignupform.classList.add('hidden');
-    
+function toggleVisibility(inputId, toggleBtn) {
+    const input = document.getElementById(inputId);
+    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+    input.setAttribute('type', type);
+    toggleBtn.innerHTML = type === 'text' ? `<i class="far fa-eye"></i>` : `<i class="far fa-eye-slash"></i>`;
 }
 
-function signuppage(){
-    mainbox.classList.add('hidden');
+function loginpage() {
+    getmainbox.classList.add('hidden');
+    getloginform.classList.remove('hidden');
+    getsignupform.classList.add('hidden');
+}
+
+function signuppage() {
+    getmainbox.classList.add('hidden');
     getsignupform.classList.remove('hidden');
     getloginform.classList.add('hidden');
 }
 
-
-
-getshowpw.addEventListener('click',function(){
-    const password = document.getElementById('loginpassword');
-    const value = password.getAttribute('type');
-    // console.log(value);
-    if (value == "password") {
-        password.setAttribute('type',"text");
-        getshowpw.innerHTML = `<i class="far fa-eye"></i>`;
-        
-    }else{
-        password.setAttribute('type',"password");
-        getshowpw.innerHTML = `<i class="far fa-eye-slash"></i>`;
-    }
-    
-});
-
-
+getshowpw.addEventListener('click', () => toggleVisibility('loginpassword', getshowpw));
+getshowsignpw.addEventListener('click', () => toggleVisibility('signuppassword', getshowsignpw));
+getshowsigncpw.addEventListener('click', () => toggleVisibility('confirmpassword', getshowsigncpw));
 
 getofloginbtn.addEventListener('click', function () {
     const email = document.getElementById('loginemail').value;
     const password = document.getElementById('loginpassword').value;
-
     const storedUser = JSON.parse(localStorage.getItem(email));
 
     if (!email || !password) {
-        alert("Please enter both email and password!");
+        alert('Please enter both email and password!');
         return;
     }
 
     if (storedUser && storedUser.password === password) {
-        // Login success: hide login form, show to-do list
+        currentUser = email;
         getloginform.classList.add('hidden');
         gettodolist.classList.remove('hidden');
+        loadUserTodos();
     } else {
-        alert("Invalid email or password!");
+        alert('Invalid email or password!');
     }
-});
-
-getshowsignpw.addEventListener('click',function(){
-    const password = document.getElementById('signuppassword');
-    const value = password.getAttribute('type');
-    // console.log(value);
-    if (value == "password") {
-        password.setAttribute('type',"text");
-        getshowsignpw.innerHTML = `<i class="far fa-eye"></i>`;
-        
-    }else{
-        password.setAttribute('type',"password");
-        getshowsignpw.innerHTML = `<i class="far fa-eye-slash"></i>`;
-    }
-    
-});
-
-getshowsigncpw.addEventListener('click',function(){
-    const cpassword = document.getElementById('confirmpassword');
-    const value = cpassword.getAttribute('type');
-    // console.log(value);
-    if (value == "password") {
-        cpassword.setAttribute('type',"text");
-        getshowsigncpw.innerHTML = `<i class="far fa-eye"></i>`;
-        
-    }else{
-        cpassword.setAttribute('type',"password");
-        getshowsigncpw.innerHTML = `<i class="far fa-eye-slash"></i>`;
-    }
-    
 });
 
 getofsignupbtn.addEventListener('click', function () {
@@ -104,83 +64,107 @@ getofsignupbtn.addEventListener('click', function () {
     const cpassword = document.getElementById('confirmpassword').value;
 
     if (!email || !password || !cpassword) {
-        alert("Please fill in all fields!");
+        alert('Please fill in all fields!');
         return;
     }
 
     if (password !== cpassword) {
-        alert("Passwords do not match!");
+        alert('Passwords do not match!');
         return;
     }
 
-    localStorage.setItem(email, JSON.stringify({ email: email, password: password }));
+    if (localStorage.getItem(email)) {
+        alert('Email is already registered!');
+        return;
+    }
 
+    localStorage.setItem(email, JSON.stringify({ email, password, todos: [] }));
     getsignupform.classList.add('hidden');
     gettodolist.classList.remove('hidden');
-
     alert(`Account created for ${email}`);
-})
-
-gettodoform.addEventListener('submit', (e) => {
-    // console.log('hey');
-    addnew();
-    e.preventDefault();
+    currentUser = email;
+    loadUserTodos();
 });
 
-const getlocaldbs = JSON.parse(localStorage.getItem('todos'));
+gettodoform.addEventListener('submit', (e) => {
+    e.preventDefault();
+    addNew();
+});
 
-if(getlocaldbs){
-    getlocaldbs.forEach(getlocaldb=>addnew(getlocaldb));
+function loadUserTodos() {
+    getul.innerHTML = '';
+    const userData = JSON.parse(localStorage.getItem(currentUser));
+    if (userData && userData.todos) {
+        userData.todos.forEach((todo) => addNew(todo));
+    }
 }
 
-function addnew(todo) {
-    let todotext = gettextbox.value;
-    console.log('todotext');
-    if(todo){
-        todotext = todo.text;
-    }
-    if (todotext) {
-        const newli = document.createElement('li');
+function addNew(todo = {}) {
+    const todotext = todo.text || gettextbox.value.trim();
+    const createdTime = todo.time || new Date().toLocaleString();
 
-        if(todo && todo.done){
-            newli.classList.add('completed');
-        } 
+    if (!todotext) return;
 
-        newli.appendChild(document.createTextNode(todotext));
-        getul.appendChild(newli);
-        gettextbox.value = '';
-        gettextbox.focus();
+    const newli = document.createElement('li');
+    newli.className = 'list-group-item flex justify-between items-center';
 
-        updatelocalstorage();
+    const todotextEl = document.createElement('span');
+    todotextEl.textContent = todotext;
+    if (todo.done) todotextEl.classList.add('completed');
 
-        // console.log(newli);
+    const timeEl = document.createElement('span');
+    timeEl.className = 'text-gray-500 text-sm';
+    timeEl.textContent = `Created: ${createdTime}`;
 
-        newli.addEventListener('click', function () {
-            newli.classList.toggle('completed');
-            updatelocalstorage();
-        });
+    const btnGroup = document.createElement('div');
+    btnGroup.className = 'flex space-x-2';
 
-        newli.addEventListener('contextmenu', function () {
-            // console.log('hello');
-            newli.remove();
-            updatelocalstorage();
-            e.preventDefault();
-        })
-    }
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn btn-sm btn-edit';
+    editBtn.textContent = 'Edit';
 
-}
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'btn btn-sm btn-delete';
+    deleteBtn.textContent = 'Delete';
 
-function updatelocalstorage() {
-    let getallis = document.querySelectorAll('li');
-
-    const todos = [];
-    getallis.forEach(getalli => {
-        todos.push({
-            text: getalli.textContent,
-            done: getalli.classList.contains('completed')
-        });
-
+    editBtn.addEventListener('click', () => {
+        const newText = prompt('Edit task:', todotextEl.textContent);
+        if (newText !== null && newText.trim() !== '') {
+            todotextEl.textContent = newText.trim();
+            updateLocalStorage();
+        }
     });
-    
-    localStorage.setItem('todos',JSON.stringify(todos));
+
+    deleteBtn.addEventListener('click', () => {
+        newli.remove();
+        updateLocalStorage();
+    });
+
+    todotextEl.addEventListener('click', () => {
+        todotextEl.classList.toggle('completed');
+        updateLocalStorage();
+    });
+
+    btnGroup.appendChild(editBtn);
+    btnGroup.appendChild(deleteBtn);
+
+    newli.appendChild(todotextEl);
+    newli.appendChild(timeEl);
+    newli.appendChild(btnGroup);
+
+    getul.appendChild(newli);
+    gettextbox.value = '';
+    updateLocalStorage();
+}
+
+function updateLocalStorage() {
+    const todos = Array.from(getul.children).map((li) => ({
+        text: li.querySelector('span:first-child').textContent,
+        time: li.querySelector('.text-gray-500').textContent.replace('Created: ', ''),
+        done: li.querySelector('span:first-child').classList.contains('completed'),
+    }));
+
+    const userData = JSON.parse(localStorage.getItem(currentUser));
+    userData.todos = todos;
+    localStorage.setItem(currentUser, JSON.stringify(userData));
 }
